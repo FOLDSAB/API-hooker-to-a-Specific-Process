@@ -69,7 +69,7 @@ if (lpAllocatedAddress == NULL) {
 }
 
 size_t noofbyteswritten = 0; 
-if (!WriteProcessMemory(pi.hProcess, lpAllocatedAddress, "randikoban\x0", 12, &noofbyteswritten)) {
+if (!WriteProcessMemory(pi.hProcess, lpAllocatedAddress, "pathdll\x0", 12, &noofbyteswritten)) {
 
 
 	printf("write process memroy failed with error no 0x%x\n", GetLastError());
