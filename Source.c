@@ -33,7 +33,9 @@ int main(int argc, char* argv[]) {
 
 	char* pProcessName = &ProcessName;
 
-	char DllPath[200] = "C:\\Users\\ACER\\Desktop\\simpledll.dll";
+	//char DllPath[200] = "C:\\Users\\ACER\\Desktop\\simpledll.dll";
+	char DllPath[200] = "C:\\Users\\ACER\\Desktop\\devm\\API_hooker_for_specified_process\\x64\\Debug\\injectordll.dll";
+
 
 
 	STARTUPINFO si;
@@ -42,10 +44,10 @@ int main(int argc, char* argv[]) {
 	si.cb = sizeof(si);
 	ZeroMemory(&pi, sizeof(pi));
 	
-
+	//CREATE_NEW_PROCESS_GROUP | DETACHED_PROCESS | CREATE_SUSPENDED
 
 // need to look at the creaprocess's dwcreationflags, which might be suitable
-	if(!CreateProcessA((LPCSTR)pProcessName,NULL,NULL,NULL,FALSE,CREATE_NEW_PROCESS_GROUP|DETACHED_PROCESS|CREATE_SUSPENDED,NULL,NULL,&si,&pi)){
+	if(!CreateProcessA((LPCSTR)pProcessName,NULL,NULL,NULL,FALSE,CREATE_SUSPENDED,NULL,NULL,&si,&pi)){
 	
 		printf("Failed to create the process with error 0x%x\n", GetLastError());
 		ProgramExit();
@@ -129,7 +131,6 @@ if (hthreadremote == NULL) {
 	ChildProcTerminator(pi.hProcess, pi.hThread);
 	ProgramExit(0);
 	
-
 }
 
 ResumeThread(hthreadremote);
@@ -139,7 +140,7 @@ WaitForSingleObject(hthreadremote, INFINITE);
 
 
 
-
+//Sleep(100000);
 
 // resuming the suspended process main thread
 	ResumeThread(pi.hThread);
@@ -179,7 +180,7 @@ WaitForSingleObject(hthreadremote, INFINITE);
 void* ProgramExit() {
 
 
-	printf("press anything to exityyyyyyyyyyyyy: ");
+	printf("press anything to exit: ");
 	char c = 'a';
 	scanf("%c", &c);
 	exit(0);
