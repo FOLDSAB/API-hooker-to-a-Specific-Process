@@ -1,9 +1,11 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
-VisualStudioVersion = 17.14.37111.16 d17.14
+VisualStudioVersion = 17.14.37111.16
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "API_hooker_for_specified_process", "API_hooker_for_specified_process.vcxproj", "{8D2469DA-DAB5-447D-95A3-97945ECCDE77}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "injectordll", "injectordll\injectordll.vcxproj", "{7D0EEDF8-0F9D-4ECE-9392-5989304A01A7}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,6 +23,14 @@ Global
 		{8D2469DA-DAB5-447D-95A3-97945ECCDE77}.Release|x64.Build.0 = Release|x64
 		{8D2469DA-DAB5-447D-95A3-97945ECCDE77}.Release|x86.ActiveCfg = Release|Win32
 		{8D2469DA-DAB5-447D-95A3-97945ECCDE77}.Release|x86.Build.0 = Release|Win32
+		{7D0EEDF8-0F9D-4ECE-9392-5989304A01A7}.Debug|x64.ActiveCfg = Debug|x64
+		{7D0EEDF8-0F9D-4ECE-9392-5989304A01A7}.Debug|x64.Build.0 = Debug|x64
+		{7D0EEDF8-0F9D-4ECE-9392-5989304A01A7}.Debug|x86.ActiveCfg = Debug|Win32
+		{7D0EEDF8-0F9D-4ECE-9392-5989304A01A7}.Debug|x86.Build.0 = Debug|Win32
+		{7D0EEDF8-0F9D-4ECE-9392-5989304A01A7}.Release|x64.ActiveCfg = Release|x64
+		{7D0EEDF8-0F9D-4ECE-9392-5989304A01A7}.Release|x64.Build.0 = Release|x64
+		{7D0EEDF8-0F9D-4ECE-9392-5989304A01A7}.Release|x86.ActiveCfg = Release|Win32
+		{7D0EEDF8-0F9D-4ECE-9392-5989304A01A7}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

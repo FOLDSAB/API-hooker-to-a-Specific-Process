@@ -33,7 +33,9 @@ int main(int argc, char* argv[]) {
 
 	char* pProcessName = &ProcessName;
 
-	char DllPath[200] = "C:\\Users\\ACER\\Desktop\\simpledll.dll";
+	//char DllPath[200] = "C:\\Users\\ACER\\Desktop\\simpledll.dll";
+	char DllPath[200] = "C:\\Users\\ACER\\Desktop\\devm\\API_hooker_for_specified_process\\x64\\Debug\\injectordll.dll";
+
 
 
 	STARTUPINFO si;
@@ -41,122 +43,122 @@ int main(int argc, char* argv[]) {
 	ZeroMemory(&si, sizeof(si));
 	si.cb = sizeof(si);
 	ZeroMemory(&pi, sizeof(pi));
-	
 
+	//CREATE_NEW_PROCESS_GROUP | DETACHED_PROCESS | CREATE_SUSPENDED
 
 // need to look at the creaprocess's dwcreationflags, which might be suitable
-	if(!CreateProcessA((LPCSTR)pProcessName,NULL,NULL,NULL,FALSE,CREATE_NEW_PROCESS_GROUP|DETACHED_PROCESS|CREATE_SUSPENDED,NULL,NULL,&si,&pi)){
-	
+	if (!CreateProcessA((LPCSTR)pProcessName, NULL, NULL, NULL, FALSE, CREATE_SUSPENDED, NULL, NULL, &si, &pi)) {
+
 		printf("Failed to create the process with error 0x%x\n", GetLastError());
 		ProgramExit();
-	
+
 
 	}
 
-	
+	printf("hello world");
 
 
-// starting to load the dll into it
+
+	// starting to load the dll into it
 	LPVOID lpAllocatedAddress = VirtualAllocEx(pi.hProcess, NULL, 256, MEM_RESERVE | MEM_COMMIT, PAGE_READWRITE);
 
 
-if (lpAllocatedAddress == NULL) {
+	if (lpAllocatedAddress == NULL) {
 
-	printf("Virtual Allocation failed with error 0x%x\n", GetLastError());
-
-
-// need to look here if the terminate process is enough or i should also close handle 
-	ChildProcTerminator(pi.hProcess, pi.hThread);
+		printf("Virtual Allocation failed with error 0x%x\n", GetLastError());
 
 
-
-	ProgramExit();
-
-}
-
-printf("allocated at ----->   0x%p\n", lpAllocatedAddress);
-
-
-size_t noofbyteswritten = 0; 
-if (!WriteProcessMemory(pi.hProcess, lpAllocatedAddress, DllPath, sizeof(DllPath), &noofbyteswritten)) {
-
-
-	printf("write process memroy failed with error no 0x%x\n", GetLastError());
-	
-	ChildProcTerminator(pi.hProcess, pi.hThread);
-	ProgramExit();
-
-
- }
-
-
-printf("the numofbytes written -----> %ld\n", noofbyteswritten);
-
-
-SECURITY_ATTRIBUTES sb; 
-
-ZeroMemory(&sb, sizeof(sb));
-sb.nLength = sizeof(sb);
-
-
-HANDLE hmodulehandle = GetModuleHandle(L"kernel32.dll");
-if (hmodulehandle == 0) {
-	printf("gethandle failed with error 0x%x\n", GetLastError());
-	ChildProcTerminator(pi.hProcess, pi.hThread);
-	ProgramExit();
-}
+		// need to look here if the terminate process is enough or i should also close handle 
+		ChildProcTerminator(pi.hProcess, pi.hThread);
 
 
 
-LPVOID lpProcAddress = GetProcAddress(hmodulehandle, "LoadLibraryA");
+		ProgramExit();
 
-if (lpProcAddress == NULL) {
+	}
 
-
-	printf("procaddress failed with error 0x%x\n", GetLastError());
-	ChildProcTerminator(pi.hProcess, pi.hThread);
-
-	ProgramExit();
-}
- 
+	printf("allocated at ----->   0x%p\n", lpAllocatedAddress);
 
 
-////
-HANDLE hthreadremote = CreateRemoteThread(pi.hProcess, &sb, 0,(LPTHREAD_START_ROUTINE) lpProcAddress, lpAllocatedAddress,CREATE_SUSPENDED, 0);
-
-if (hthreadremote == NULL) {
-	printf("Failed to create remote thread with error 0x%x\n", GetLastError());
-	ChildProcTerminator(pi.hProcess, pi.hThread);
-	ProgramExit(0);
-	
-
-}
-
-ResumeThread(hthreadremote);
+	size_t noofbyteswritten = 0;
+	if (!WriteProcessMemory(pi.hProcess, lpAllocatedAddress, DllPath, sizeof(DllPath), &noofbyteswritten)) {
 
 
-WaitForSingleObject(hthreadremote, INFINITE);
+		printf("write process memroy failed with error no 0x%x\n", GetLastError());
+
+		ChildProcTerminator(pi.hProcess, pi.hThread);
+		ProgramExit();
+
+
+	}
+
+
+	printf("the numofbytes written -----> %ld\n", noofbyteswritten);
+
+
+	SECURITY_ATTRIBUTES sb;
+
+	ZeroMemory(&sb, sizeof(sb));
+	sb.nLength = sizeof(sb);
+
+
+	HANDLE hmodulehandle = GetModuleHandle(L"kernel32.dll");
+	if (hmodulehandle == 0) {
+		printf("gethandle failed with error 0x%x\n", GetLastError());
+		ChildProcTerminator(pi.hProcess, pi.hThread);
+		ProgramExit();
+	}
 
 
 
+	LPVOID lpProcAddress = GetProcAddress(hmodulehandle, "LoadLibraryA");
+
+	if (lpProcAddress == NULL) {
 
 
-// resuming the suspended process main thread
+		printf("procaddress failed with error 0x%x\n", GetLastError());
+		ChildProcTerminator(pi.hProcess, pi.hThread);
+
+		ProgramExit();
+	}
+
+
+
+	////
+	HANDLE hthreadremote = CreateRemoteThread(pi.hProcess, &sb, 0, (LPTHREAD_START_ROUTINE)lpProcAddress, lpAllocatedAddress, CREATE_SUSPENDED, 0);
+
+	if (hthreadremote == NULL) {
+		printf("Failed to create remote thread with error 0x%x\n", GetLastError());
+		ChildProcTerminator(pi.hProcess, pi.hThread);
+		ProgramExit(0);
+
+	}
+
+	ResumeThread(hthreadremote);
+
+
+	WaitForSingleObject(hthreadremote, INFINITE);
+
+
+
+	//Sleep(100000);
+
+	// resuming the suspended process main thread
 	ResumeThread(pi.hThread);
 
 
 
 
-// waiting for the child process to exit then closing it's process handle and thread handle
+	// waiting for the child process to exit then closing it's process handle and thread handle
 	WaitForSingleObject(pi.hProcess, INFINITE);
 
-	
+
 
 
 	ChildProcTerminator(pi.hProcess, pi.hThread);
 
 
-	
+
 	ProgramExit();
 
 
@@ -164,8 +166,8 @@ WaitForSingleObject(hthreadremote, INFINITE);
 
 
 
-	
-	
+
+
 
 
 
@@ -179,10 +181,9 @@ WaitForSingleObject(hthreadremote, INFINITE);
 void* ProgramExit() {
 
 
-	printf("press anything to exityyyyyyyyyyyyy: ");
+	printf("press anything to exitss: ");
 	char c = 'a';
 	scanf("%c", &c);
 	exit(0);
 
 }
-
