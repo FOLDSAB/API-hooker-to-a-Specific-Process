@@ -43,11 +43,12 @@ int main(int argc, char* argv[]) {
 	ZeroMemory(&si, sizeof(si));
 	si.cb = sizeof(si);
 	ZeroMemory(&pi, sizeof(pi));
-	
+
+	//CREATE_NEW_PROCESS_GROUP | DETACHED_PROCESS | CREATE_SUSPENDED
 
 // need to look at the creaprocess's dwcreationflags, which might be suitable
-	if(!CreateProcessA((LPCSTR)pProcessName,NULL,NULL,NULL,FALSE,CREATE_NEW_PROCESS_GROUP|DETACHED_PROCESS|CREATE_SUSPENDED,NULL,NULL,&si,&pi)){
-	
+	if (!CreateProcessA((LPCSTR)pProcessName, NULL, NULL, NULL, FALSE, CREATE_SUSPENDED, NULL, NULL, &si, &pi)) {
+
 		printf("Failed to create the process with error 0x%x\n", GetLastError());
 		ProgramExit();
 
@@ -126,13 +127,12 @@ int main(int argc, char* argv[]) {
 	////
 	HANDLE hthreadremote = CreateRemoteThread(pi.hProcess, &sb, 0, (LPTHREAD_START_ROUTINE)lpProcAddress, lpAllocatedAddress, CREATE_SUSPENDED, 0);
 
-if (hthreadremote == NULL) {
-	printf("Failed to create remote thread with error 0x%x\n", GetLastError());
-	ChildProcTerminator(pi.hProcess, pi.hThread);
-	ProgramExit(0);
-	
+	if (hthreadremote == NULL) {
+		printf("Failed to create remote thread with error 0x%x\n", GetLastError());
+		ChildProcTerminator(pi.hProcess, pi.hThread);
+		ProgramExit(0);
 
-}
+	}
 
 	ResumeThread(hthreadremote);
 
@@ -141,7 +141,7 @@ if (hthreadremote == NULL) {
 
 
 
-
+	//Sleep(100000);
 
 	// resuming the suspended process main thread
 	ResumeThread(pi.hThread);
@@ -181,7 +181,7 @@ if (hthreadremote == NULL) {
 void* ProgramExit() {
 
 
-	printf("press anything to exityyyyyyyyyyyyy: ");
+	printf("press anything to exitss: ");
 	char c = 'a';
 	scanf("%c", &c);
 	exit(0);
