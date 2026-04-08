@@ -181,7 +181,7 @@ int main(int argc, char* argv[]) {
 void* ProgramExit() {
 
 
-	printf("press anything to exitss: ");
+	printf("press anything to exit: ");
 	char c = 'a';
 	scanf("%c", &c);
 	exit(0);
