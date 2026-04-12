@@ -34,7 +34,7 @@ int main(int argc, char* argv[]) {
 	char* pProcessName = &ProcessName;
 
 	//char DllPath[200] = "C:\\Users\\ACER\\Desktop\\simpledll.dll";
-	char DllPath[200] = "C:\\Users\\ACER\\Desktop\\devm\\API_hooker_for_specified_process\\x64\\Debug\\injectordll.dll";
+	char DllPath[200] = "C:\\Users\\ACER\\Desktop\\API_hooker_for_specified_process\\x64\\Debug\\injectordll.dll";
 
 
 
